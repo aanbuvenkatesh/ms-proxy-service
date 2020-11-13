@@ -18,7 +18,15 @@ public class ProxyServiceValidator {
 
 	public static void validateProxyInput(ProxyServiceView requestPayload) {
 		validateURL(requestPayload.getUrl());
+		validateRequestType(requestPayload.getRequestType());
 		validateRequestBody(requestPayload.getRequestType(), requestPayload.getRequestBody());
+	}
+
+	private static void validateRequestType(HttpRequestType httpRequestType) {
+		if (httpRequestType == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					ResponseMessageHub.MISSING_FIELD_DATA.getMessage(ProxyServiceView.FIELD_HTTP_REQUEST_TYPE));
+		}
 	}
 
 	private static void validateRequestBody(HttpRequestType requestType, String requestBody) {
