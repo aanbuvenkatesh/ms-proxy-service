@@ -1,7 +1,7 @@
 openapi: 3.0.0
 servers:
   - description: Mock URL
-    url: 'http://localhost:8080/ms-proxy-service/api/v1.0.0'
+    url: 'http://localhost:8080/ms-proxy-service/v1.0.0'
 info:
   description: Proxy Service capable of routing the requests to the destination server and returns the response received.
   version: v1.0.0
