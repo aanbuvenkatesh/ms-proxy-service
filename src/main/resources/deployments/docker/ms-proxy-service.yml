@@ -17,5 +17,6 @@ services:
       - "8080:8080"
       - "40500:40500"
     environment:
-      io.anbu.proxy.user.limit: 50
-      io.anbu.proxy.timeout.seconds: 5 
+      io.anbu.proxy.user.limit: "50"
+      io.anbu.proxy.timeout.seconds: "5"
+      io.anbu.proxy.limit.reset.minutes: "1"
