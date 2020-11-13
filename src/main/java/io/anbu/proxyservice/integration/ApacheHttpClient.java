@@ -89,6 +89,8 @@ public class ApacheHttpClient implements HttpRequestHandler {
 	}
 
 	private void addHeaderToRequest(HttpRequestBase request, Map<String, String> headers) {
+		if (headers == null)
+			return;
 		for (Map.Entry<String, String> header : headers.entrySet()) {
 			request.addHeader(header.getKey(), header.getValue());
 		}
