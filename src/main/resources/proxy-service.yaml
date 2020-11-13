@@ -1,0 +1,90 @@
+openapi: 3.0.0
+servers:
+  - description: Mock URL
+    url: 'http://localhost:8080/ms-proxy-service/api/v1.0.0'
+info:
+  description: Proxy Service capable of routing the requests to the destination server and returns the response received.
+  version: v1.0.0
+  title: Proxy Service APIs
+  contact:
+    email: anbuvenkatesh.a@outlook.com
+
+tags:
+  - name: Proxy Service
+    description: API to manage the proxy service
+
+paths:
+  '/proxy/serve/client/{clientId}':
+    post:
+      summary: Proxy Service to route the requests
+      description: Proxy Service to route the requests. Accepts POST, PUT and GET requests to be routed.
+      operationId: proxyService
+      tags:
+        - Proxy Service
+      parameters:
+        - name: clientId
+          in: path
+          description: Client from which the request is initiated
+          required: true
+          schema:
+            type: string
+            example: AJ234TY7U2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProxyServiceView'
+      responses:
+        '200':
+          description: Success Response
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardErrorResponse'
+
+components:
+  schemas:
+    StandardErrorResponse:
+      properties:
+        timestamp:
+          description: TimeStamp when the error is thrown
+          type: string
+          format: date-time
+          example: "2020-11-12T16:51:28.674+00:00"
+        status:
+          description: Http Status Code
+          type: integer
+          example: 400
+        error:
+          description: Error Messae
+          type: string
+          example: "Bad Request" 
+        message:
+          description: Description of the Error Message
+          type: string
+          example: "Invalid URL"
+        path:
+          description: Endpoint from which the error is thrown
+          type: string
+          example: "/ms-proxy-service/v1.0.0/proxy/serve/client/AJ234TY7U2" 
+    ProxyServiceView:
+      properties:
+        url:
+          description: Target https end point
+          type: string
+          example: https://www.google.com
+        headers:
+          description: Headers should be passed to the request
+          type: object
+        requestType:
+          description: Type of the http request
+          type: string
+          enum: [GET, PUT, POST]
+        requestBody:
+          description: Request payload incase of POST and PUT requests
+          type: string
+          example: ""
+          
+    

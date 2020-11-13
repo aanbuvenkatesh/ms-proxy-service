@@ -96,8 +96,8 @@ public class ApacheHttpClient implements HttpRequestHandler {
 
 	private RequestConfig getHttpConfig() {
 		RequestConfig.Builder config = RequestConfig.custom();
-		config.setConnectTimeout(configuration.getTimeOut() * 1000);
-		config.setConnectionRequestTimeout(configuration.getTimeOut() * 1000);
+		config.setConnectTimeout(configuration.getHttpTimeOut() * 1000);
+		config.setConnectionRequestTimeout(configuration.getHttpTimeOut() * 1000);
 		return config.build();
 	}
 
