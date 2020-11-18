@@ -2,10 +2,24 @@ package io.anbu.proxyservice.entity;
 
 import java.util.Date;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class Client {
 
+	@Id
+	private String clientId;
 	private Integer requestCount;
 	private Date lastResetTime;
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
 
 	public Integer getRequestCount() {
 		return requestCount;

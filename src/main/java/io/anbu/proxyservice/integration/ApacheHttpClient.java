@@ -14,7 +14,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -24,9 +23,6 @@ import io.anbu.proxyservice.config.ProxyConfiguration;
 
 @Component
 public class ApacheHttpClient implements HttpRequestHandler {
-
-	@Autowired
-	private ProxyConfiguration configuration;
 
 	@Override
 	public HttpResponse httpPost(String url, Map<String, String> headers, String requestBody) {
@@ -98,8 +94,8 @@ public class ApacheHttpClient implements HttpRequestHandler {
 
 	private RequestConfig getHttpConfig() {
 		RequestConfig.Builder config = RequestConfig.custom();
-		config.setConnectTimeout(configuration.getHttpTimeOut() * 1000);
-		config.setConnectionRequestTimeout(configuration.getHttpTimeOut() * 1000);
+		config.setConnectTimeout(ProxyConfiguration.getHttpTimeOut() * 1000);
+		config.setConnectionRequestTimeout(ProxyConfiguration.getHttpTimeOut() * 1000);
 		return config.build();
 	}
 

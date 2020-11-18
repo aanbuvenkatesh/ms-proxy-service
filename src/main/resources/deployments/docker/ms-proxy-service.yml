@@ -4,6 +4,48 @@
 
 version: '3.6'
 services:
+  db-service1:
+    build:
+      context: ${MONGO_DB_CONTEXT}
+      dockerfile: Dockerfile
+      args:
+        DB_BASE_IMAGE: ${MONGO_DB_BASE_IMAGE}
+    container_name: 'ms-proxy-mongo-node1'
+    ports:
+      - "27017:27017"
+
+  db-service2:
+    build:
+      context: ${MONGO_DB_CONTEXT}
+      dockerfile: Dockerfile
+      args:
+        DB_BASE_IMAGE: ${MONGO_DB_BASE_IMAGE}
+    container_name: 'ms-proxy-mongo-node2'
+    ports:
+      - "27018:27017"
+
+  db-service3:
+    build:
+      context: ${MONGO_DB_CONTEXT}
+      dockerfile: Dockerfile
+      args:
+        DB_BASE_IMAGE: ${MONGO_DB_BASE_IMAGE}
+    container_name: 'ms-proxy-mongo-node3'
+    ports:
+      - "27019:27017"
+
+  mongosetup:
+    container_name: 'ms-proxy-mongoinit'
+    build:
+      context: ${MONGO_INIT_CONTEXT}
+      dockerfile: Dockerfile
+      args:
+        DB_BASE_IMAGE: ${MONGO_DB_BASE_IMAGE}
+    depends_on:
+      - db-service1
+      - db-service2
+      - db-service3
+
   api:
     build:
       context: ${API_CONTEXT}
@@ -16,7 +58,17 @@ services:
     ports:
       - "8080:8080"
       - "40500:40500"
+    depends_on:
+      - db-service1
+      - db-service2
+      - db-service3
     environment:
+      #----- DATABASE CONFIG -----
+      io.anbu.proxy.db.key: MongoDB
+      io.anbu.proxy.db.name: ms_proxy
+      io.anbu.proxy.db.connection: mongodb://ms-proxy-mongo-node1:27017,ms-proxy-mongo-node2:27017,ms-proxy-mongo-node3:27017
+      
+      #----- APP CONFIG -------
       io.anbu.proxy.user.limit: "50"
       io.anbu.proxy.timeout.seconds: "5"
       io.anbu.proxy.limit.reset.minutes: "1"

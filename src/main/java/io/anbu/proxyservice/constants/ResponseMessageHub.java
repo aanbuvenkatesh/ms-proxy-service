@@ -16,6 +16,6 @@ public enum ResponseMessageHub {
 	}
 
 	public String getMessage(String... params) {
-		return String.format(this.message, (Object[]) params);
+		return "[PROXY] " + String.format(this.message, (Object[]) params);
 	}
 }
