@@ -53,22 +53,8 @@ public class ProxyService {
 	}
 
 	private HttpResponse executeRequest(String clientId, ProxyServiceView requestPayload) {
-		HttpResponse httpResponse = new HttpResponse();
-		switch (requestPayload.getRequestType()) {
-		case GET:
-			httpResponse = httpRequest.httpGet(requestPayload.getUrl(), requestPayload.getHeaders());
-			break;
-		case POST:
-			httpResponse = httpRequest.httpPost(requestPayload.getUrl(), requestPayload.getHeaders(),
-					requestPayload.getRequestBody());
-			break;
-		case PUT:
-			httpResponse = httpRequest.httpPut(requestPayload.getUrl(), requestPayload.getHeaders(),
-					requestPayload.getRequestBody());
-			break;
-		default:
-			break;
-		}
+		HttpResponse httpResponse = httpRequest.executeRequest(requestPayload.getRequestType(), requestPayload.getUrl(),
+				requestPayload.getHeaders(), requestPayload.getRequestBody());
 		appendHeaders(httpResponse, clientId);
 		return httpResponse;
 	}

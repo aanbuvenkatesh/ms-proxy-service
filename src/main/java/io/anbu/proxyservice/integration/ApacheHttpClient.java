@@ -1,15 +1,20 @@
 package io.anbu.proxyservice.integration;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import org.apache.http.Header;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -20,60 +25,62 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import io.anbu.proxyservice.config.ProxyConfiguration;
+import io.anbu.proxyservice.constants.HttpRequestType;
 
 @Component
 public class ApacheHttpClient implements HttpRequestHandler {
 
 	@Override
-	public HttpResponse httpPost(String url, Map<String, String> headers, String requestBody) {
+	public HttpResponse executeRequest(HttpRequestType requestType, String url, Map<String, String> headers,
+			String requestBody) {
 		HttpResponse httpResponse = new HttpResponse();
 		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(getHttpConfig())
 				.build()) {
-			HttpPost httpPost = new HttpPost(url);
-			addHeaderToRequest(httpPost, headers);
-			StringEntity stringEntity = new StringEntity(requestBody);
-			httpPost.setEntity(stringEntity);
-			CloseableHttpResponse response = httpclient.execute(httpPost);
+			HttpRequestBase httpRequest = getHttpClient(requestType, url, requestBody);
+			addHeaderToRequest(httpRequest, headers);
+			CloseableHttpResponse response = httpclient.execute(httpRequest);
 			httpResponse.setHeaders(transformHeader(response.getAllHeaders()));
-			httpResponse.setResponse(EntityUtils.toString(response.getEntity()));
+			httpResponse.setResponse(response.getEntity() == null ? "" : EntityUtils.toString(response.getEntity()));
 		} catch (IOException e) {
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ERROR_PREFIX + e.getMessage(), e);
 		}
 		return httpResponse;
 	}
 
-	@Override
-	public HttpResponse httpPut(String url, Map<String, String> headers, String requestBody) {
-		HttpResponse httpResponse = new HttpResponse();
-		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(getHttpConfig())
-				.build()) {
-			HttpPut httpPut = new HttpPut(url);
-			addHeaderToRequest(httpPut, headers);
-			StringEntity stringEntity = new StringEntity(requestBody);
-			httpPut.setEntity(stringEntity);
-			CloseableHttpResponse response = httpclient.execute(httpPut);
-			httpResponse.setHeaders(transformHeader(response.getAllHeaders()));
-			httpResponse.setResponse(EntityUtils.toString(response.getEntity()));
-		} catch (IOException e) {
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+	private HttpRequestBase getHttpClient(HttpRequestType requestType, String url, String requestBody)
+			throws UnsupportedEncodingException {
+		HttpRequestBase httpClient = null;
+		StringEntity stringEntity = null;
+		switch (requestType) {
+		case GET:
+			httpClient = new HttpGet(url);
+			break;
+		case POST:
+			httpClient = new HttpPost(url);
+			stringEntity = new StringEntity(requestBody);
+			((HttpPost) httpClient).setEntity(stringEntity);
+			break;
+		case PUT:
+			httpClient = new HttpPut(url);
+			stringEntity = new StringEntity(requestBody);
+			((HttpPut) httpClient).setEntity(stringEntity);
+			break;
+		case DELETE:
+			httpClient = new HttpDelete(url);
+			break;
+		case HEAD:
+			httpClient = new HttpHead(url);
+			break;
+		case OPTIONS:
+			httpClient = new HttpOptions(url);
+			break;
+		case TRACE:
+			httpClient = new HttpTrace(url);
+			break;
+		default:
+			break;
 		}
-		return httpResponse;
-	}
-
-	@Override
-	public HttpResponse httpGet(String url, Map<String, String> headers) {
-		HttpResponse httpResponse = new HttpResponse();
-		try (CloseableHttpClient httpclient = HttpClientBuilder.create().setDefaultRequestConfig(getHttpConfig())
-				.build()) {
-			HttpGet httpGet = new HttpGet(url);
-			addHeaderToRequest(httpGet, headers);
-			CloseableHttpResponse response = httpclient.execute(httpGet);
-			httpResponse.setHeaders(transformHeader(response.getAllHeaders()));
-			httpResponse.setResponse(EntityUtils.toString(response.getEntity()));
-		} catch (IOException e) {
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
-		}
-		return httpResponse;
+		return httpClient;
 	}
 
 	private HttpHeaders transformHeader(Header[] allHeaders) {
