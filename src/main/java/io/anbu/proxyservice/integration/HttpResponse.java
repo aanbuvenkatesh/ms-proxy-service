@@ -2,6 +2,11 @@ package io.anbu.proxyservice.integration;
 
 import org.springframework.http.HttpHeaders;
 
+/**
+ * Http Response paramerets
+ * 
+ * @author aanbuvenkatesh
+ */
 public class HttpResponse {
 
 	private HttpHeaders headers;

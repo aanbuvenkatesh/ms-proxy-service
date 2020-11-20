@@ -11,6 +11,11 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
+/**
+ * Mongo Configuration for Proxy application
+ * 
+ * @author aanbuvenkatesh
+ */
 public class MongoConfiguration extends AbstractMongoClientConfiguration {
 
 	@Bean

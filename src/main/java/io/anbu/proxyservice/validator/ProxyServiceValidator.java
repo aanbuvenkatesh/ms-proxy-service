@@ -7,6 +7,11 @@ import io.anbu.proxyservice.constants.HttpRequestType;
 import io.anbu.proxyservice.constants.ResponseMessageHub;
 import io.anbu.proxyservice.view.ProxyServiceView;
 
+/**
+ * Validations for proxy service.
+ * 
+ * @author aanbuvenkatesh
+ */
 public class ProxyServiceValidator {
 
 	private ProxyServiceValidator() {

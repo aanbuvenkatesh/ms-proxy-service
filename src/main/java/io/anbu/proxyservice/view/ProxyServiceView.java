@@ -4,6 +4,11 @@ import java.util.Map;
 
 import io.anbu.proxyservice.constants.HttpRequestType;
 
+/**
+ * View class for the Proxy Service to get the request payload.
+ * 
+ * @author aanbuvenkatesh
+ */
 public class ProxyServiceView {
 
 	public static final String FIELD_URL = "url";

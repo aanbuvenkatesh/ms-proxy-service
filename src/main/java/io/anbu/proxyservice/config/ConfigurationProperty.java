@@ -1,5 +1,10 @@
 package io.anbu.proxyservice.config;
 
+/**
+ * Configuration property for Proxy application
+ * 
+ * @author aanbuvenkatesh
+ */
 public enum ConfigurationProperty {
 
 	TIMEOUT_SECONDS("timeout.seconds", "5"), 

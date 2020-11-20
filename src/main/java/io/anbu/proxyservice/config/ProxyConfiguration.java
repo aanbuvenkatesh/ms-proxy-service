@@ -1,5 +1,10 @@
 package io.anbu.proxyservice.config;
 
+/**
+ * Proxy Service configuration properties.
+ * 
+ * @author aanbuvenkatesh
+ */
 public class ProxyConfiguration {
 
 	private ProxyConfiguration() {

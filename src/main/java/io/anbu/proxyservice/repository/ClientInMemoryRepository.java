@@ -5,6 +5,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import io.anbu.proxyservice.entity.Client;
 
+/**
+ * In memory client repository for client data.
+ * 
+ * @author aanbuvenkatesh
+ */
 public class ClientInMemoryRepository implements ClientRepository {
 
 	private static ConcurrentHashMap<String, Client> clientDataStore = new ConcurrentHashMap<>();

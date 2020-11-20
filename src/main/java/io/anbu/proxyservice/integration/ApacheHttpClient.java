@@ -27,6 +27,11 @@ import org.springframework.web.server.ResponseStatusException;
 import io.anbu.proxyservice.config.ProxyConfiguration;
 import io.anbu.proxyservice.constants.HttpRequestType;
 
+/**
+ * Apache HTTP client for handling the http requests for the proxy service
+ * 
+ * @author aanbuvenkatesh
+ */
 @Component
 public class ApacheHttpClient implements HttpRequestHandler {
 

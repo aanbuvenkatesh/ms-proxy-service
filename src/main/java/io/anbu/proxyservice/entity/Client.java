@@ -5,6 +5,11 @@ import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Entity class for Client data
+ * 
+ * @author aanbuvenkatesh
+ */
 @Document
 public class Client {
 

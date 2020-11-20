@@ -1,5 +1,7 @@
 package io.anbu.proxyservice.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.http.HttpStatus;
@@ -14,8 +16,16 @@ import io.anbu.proxyservice.repository.ClientRepository;
 import io.anbu.proxyservice.validator.ProxyServiceValidator;
 import io.anbu.proxyservice.view.ProxyServiceView;
 
+/**
+ * Proxy Service used to validate and route the incoming requests for a client.
+ * Invoked through a HTTP Call.
+ * 
+ * @author aanbuvenkatesh
+ */
 @Service(value = BeanDefinition.SCOPE_PROTOTYPE)
 public class ProxyService {
+
+	Logger logger = LoggerFactory.getLogger(ProxyService.class);
 
 	private ClientRepository clientRepository;
 
@@ -28,11 +38,13 @@ public class ProxyService {
 
 	public HttpResponse invoke(String clientId, ProxyServiceView requestPayload) {
 		processClient(clientId);
+		logger.debug("Validating the request payload");
 		ProxyServiceValidator.validateProxyInput(requestPayload);
 		return executeRequest(clientId, requestPayload);
 	}
 
 	private void processClient(String clientId) {
+		logger.debug("Processing the client request " + clientId);
 		if (clientRepository.getClientData(clientId) == null) {
 			clientRepository.incrementRequestCount(clientId);
 		} else if (getIntervalFromLastReset(clientId) >= ProxyConfiguration.getLimitResetTime()) {
@@ -53,6 +65,7 @@ public class ProxyService {
 	}
 
 	private HttpResponse executeRequest(String clientId, ProxyServiceView requestPayload) {
+		logger.debug("Executing the request");
 		HttpResponse httpResponse = httpRequest.executeRequest(requestPayload.getRequestType(), requestPayload.getUrl(),
 				requestPayload.getHeaders(), requestPayload.getRequestBody());
 		appendHeaders(httpResponse, clientId);

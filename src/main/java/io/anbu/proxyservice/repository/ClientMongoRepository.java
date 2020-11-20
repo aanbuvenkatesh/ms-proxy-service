@@ -8,6 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import io.anbu.proxyservice.config.MongoConfiguration;
 import io.anbu.proxyservice.entity.Client;
 
+/**
+ * Mongo repository for the client entity
+ * 
+ * @author aanbuvenkatesh
+ */
 public class ClientMongoRepository implements ClientRepository {
 
 	private MongoConfiguration mongoConfig;
